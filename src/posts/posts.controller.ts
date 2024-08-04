@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -84,5 +85,28 @@ export class PostsController {
     posts = [...posts, post];
 
     return post;
+  }
+
+  @Patch(':id')
+  patchPost(
+    @Param('id') id: number,
+    @Body('author') author?: string,
+    @Body('title') title?: string,
+    @Body('content') content?: string,
+  ): Post {
+    const postIndex = posts.findIndex((post) => post.id === id);
+
+    if (postIndex === -1) {
+      throw new NotFoundException('Post not found');
+    }
+
+    posts[postIndex] = {
+      ...posts[postIndex],
+      author: author || posts[postIndex].author,
+      title: title || posts[postIndex].title,
+      content: content || posts[postIndex].content,
+    };
+
+    return posts[postIndex];
   }
 }
