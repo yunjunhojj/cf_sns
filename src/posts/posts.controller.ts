@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -18,7 +19,7 @@ interface Post {
   comments: number;
 }
 
-const posts: Post[] = [
+let posts: Post[] = [
   {
     id: 1,
     author: 'John',
@@ -49,21 +50,6 @@ const posts: Post[] = [
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  // GET /posts
-  // Get all posts
-
-  // GET /posts/:id
-  // Get a post by id
-
-  // POST /posts
-  // Create a new post
-
-  // PUT /posts/:id
-  // Update a post by id
-
-  // DELETE /posts/:id
-  // Delete a post by id
-
   @Get()
   getPosts(): Post[] {
     return posts;
@@ -76,6 +62,26 @@ export class PostsController {
     if (!post) {
       throw new NotFoundException('Post not found');
     }
+
+    return post;
+  }
+
+  @Post()
+  createPost(
+    @Body('author') author: string,
+    @Body('title') title: string,
+    @Body('content') content: string,
+  ): Post {
+    const post: Post = {
+      id: posts[posts.length - 1].id + 1,
+      author,
+      title,
+      content,
+      likes: 0,
+      comments: 0,
+    };
+
+    posts = [...posts, post];
 
     return post;
   }
