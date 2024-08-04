@@ -109,4 +109,17 @@ export class PostsController {
 
     return posts[postIndex];
   }
+
+  @Delete(':id')
+  deletePost(@Param('id') id: number): Post {
+    const postIndex = posts.findIndex((post) => post.id === id);
+
+    if (postIndex === -1) {
+      throw new NotFoundException('Post not found');
+    }
+
+    posts.filter((post) => post.id !== id);
+
+    return posts[postIndex];
+  }
 }
